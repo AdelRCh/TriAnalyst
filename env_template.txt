@@ -1,0 +1,6 @@
+# The Triathlon API key is obtained at https://developers.triathlon.org/
+# This project uses the Open Weather Map API at https://openweathermap.org/
+# Your .env file needs to contain the following entries when deploying
+# this project locally:
+TRIATHLON_API_KEY=""
+WEATHER_API_KEY=""
