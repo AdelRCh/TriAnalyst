@@ -1,0 +1,5 @@
+# Main app requirements
+requests
+
+# Testing requirements (take out the # on the line below)
+#pytest
