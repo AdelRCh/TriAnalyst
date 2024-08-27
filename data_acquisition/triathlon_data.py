@@ -10,8 +10,8 @@ TRIATHLON_API = os.getenv('TRIATHLON_API_KEY')
 WEATHER_API = os.getenv('WEATHER_API_KEY')
 
 # General API request function template (fit for purpose)
-def triathlon_api_request(section:str, query_content:dict=None,
-                          sub_argument:Optional[Union[int,str]]=None,
+def triathlon_api_request(section:str, query_content:dict={},
+                          sub_args:Optional[Union[int,str,list]]=None,
                           filters:dict=None, version:str = "v1"):
     '''The request function of our project for Triathlon API queries.
     Inputs:
@@ -29,8 +29,17 @@ def triathlon_api_request(section:str, query_content:dict=None,
     re_url=f"{api_url}/{version}/{section}"
 
     # Sub-arguments if needed (e.g.: athletes/<athlete_id>?...)
-    if sub_argument is not None:
-        api_url=api_url+f'/{sub_argument}'
+    if sub_args is not None:
+        #In the case of event programs (many triathlon categories in one event),
+        #we will receive a list of parameters. We will then unwrap them as
+        #param_1/param_2/param_3/.../param_n
+        if isinstance(sub_args,list):
+            sub_arg_str = '/'.join([f'{item}' for item in sub_args])
+            api_url = api_url+f'/{sub_arg_str}'
+
+        #Otherwise, we will likely only receive one argument.
+        else:
+            api_url=api_url+f'/{sub_args}'
 
     # Supplies the Triathlon API key to the request. Do not remove.
     re_headers = {'apikey': TRIATHLON_API}
