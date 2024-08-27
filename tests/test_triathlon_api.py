@@ -36,3 +36,26 @@ def test_events_endpoint():
                                        query_content=qct, version="v1")
     PAUSE_NEEDED = True
     assert re.status_code==200
+
+def test_athlete_profile_retrieval():
+    '''Testing whether we can retrieve an athlete's profile successfully'''
+    global PAUSE_NEEDED
+    tri_data.pause_between_reqs(PAUSE_NEEDED)
+    qct={"output":"basic"}
+    athlete_id=80795
+    re = tri_data.triathlon_api_request(section="athletes",
+                                        sub_argument=athlete_id,
+                                        query_content=qct, version="v1")
+    PAUSE_NEEDED = True
+    assert re.status_code==200
+
+def test_event_info_retrieval():
+    '''Testing whether we can retrieve an event's information successfully'''
+    global PAUSE_NEEDED
+    tri_data.pause_between_reqs(PAUSE_NEEDED)
+    event_id=90162
+    re = tri_data.triathlon_api_request(section="events",
+                                        sub_argument=event_id,
+                                        version="v1")
+    PAUSE_NEEDED = True
+    assert re.status_code==200

@@ -10,7 +10,7 @@ TRIATHLON_API = os.getenv('TRIATHLON_API_KEY')
 WEATHER_API = os.getenv('WEATHER_API_KEY')
 
 # General API request function template (fit for purpose)
-def triathlon_api_request(section:str, query_content:dict,
+def triathlon_api_request(section:str, query_content:dict=None,
                           sub_argument:Optional[Union[int,str]]=None,
                           filters:dict=None, version:str = "v1"):
     '''The request function of our project for Triathlon API queries.
