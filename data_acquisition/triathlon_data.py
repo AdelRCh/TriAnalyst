@@ -2,12 +2,10 @@ import requests
 from dotenv import load_dotenv
 import os
 from typing import Optional, Union
-import time
 
 #Loading environment variables
 load_dotenv()
 TRIATHLON_API = os.getenv('TRIATHLON_API_KEY')
-WEATHER_API = os.getenv('WEATHER_API_KEY')
 
 # General API request function template (fit for purpose)
 def triathlon_api_request(section:str, query_content:dict={},
@@ -55,8 +53,3 @@ def triathlon_api_request(section:str, query_content:dict={},
 
     re = requests.get(url=re_url, headers=re_headers, params=query_content)
     return re
-
-# Preventing the "Too Many Requests" error code, avoiding rate limitations.
-def pause_between_reqs(needed:bool=False):
-    if needed:
-        time.sleep(10)
