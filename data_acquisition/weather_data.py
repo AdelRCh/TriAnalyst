@@ -39,8 +39,11 @@ def retrieve_date_info(prog_data: dict):
     - a Unix timestamp (int type)'''
 
     # Get the date/time timestamp (in integer)
-    dt_string = prog_data.get("prog_date_utc",None) + "T"
-    dt_string = dt_string + prog_data.get("prog_time_utc",None) + "Z"
+    dt_string = prog_data.get("prog_date_utc",'') + "T"
+
+    # Force UTC, but keep backwards compatibility with old Python versions
+    # (no Z, use +00:00 instead)
+    dt_string = dt_string + prog_data.get("prog_time_utc",'') + "+00:00"
     prog_dt = dt.datetime.fromisoformat(dt_string).timestamp()
 
     return int(round(prog_dt))
