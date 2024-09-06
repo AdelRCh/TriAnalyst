@@ -10,49 +10,54 @@ load_dotenv()
 WEATHER_API = os.getenv('WEATHER_API_KEY')
 
 # Retrieving the information from our program requests:
-def retrieve_event_coords(req_dump: requests.Response):
-    '''Upon receiving Triathlon program data, we extract the date/time
-    information as well as the latitude/longitude of the event.
-    The output of this function is a dictionary with the keys "lat", "lon"
-    and "dtime".'''
+def retrieve_event_coords(event_data: dict):
+    '''Upon receiving Triathlon event data, we extract the latitude/longitude
+    of the event.
 
-    # Sort the data
-    req_data = req_dump.json()
+    Input:
+    - event_data: a dictionary, the output of requests.Response.json()
+
+    Returns:
+    - a dictionary with {"lat":<value>, "lon":<value>} key-value pairs.'''
 
     # Assembling the dictionary
     output = {
-        "lat":req_data.get("event_latitude",None),
-        "lon":req_data.get("event_longitude",None),
+        "lat":event_data.get("event_latitude",None),
+        "lon":event_data.get("event_longitude",None),
     }
 
     return output
 
-def retrieve_date_info(req_dump: requests.Response):
+def retrieve_date_info(prog_data: dict):
+    '''Upon receiving Triathlon program data, we extract the date/times in UTC
+    and retrieve a Unix timestamp to forward to the Weather API.
 
-    # Sort the data
-    req_data = req_dump.json()
+    Input:
+    - prog_data: a dictionary resulting from requests.Response.json()
+
+    Returns:
+    - a Unix timestamp (int type)'''
 
     # Get the date/time timestamp (in integer)
-    dt_string = req_data.get("prog_date_utc",None) + "T"
-    dt_string = dt_string + req_data.get("prog_time_utc",None) + "Z"
+    dt_string = prog_data.get("prog_date_utc",None) + "T"
+    dt_string = dt_string + prog_data.get("prog_time_utc",None) + "Z"
     prog_dt = dt.datetime.fromisoformat(dt_string).timestamp()
 
-    return prog_dt
+    return int(round(prog_dt))
 
 # Weather data request for a given timestamp.
-def weather_history_request(lat, lon, dtime):
+def weather_history_request(coords:dict, dtime: int):
     '''This function returns weather data based on the latitude, longitude, and
     date/time in UTC. Upon receiving relevant information from the Triathlon
     API, we will forward them here for this API query.
-    - lat: latitude, float
-    - lon: longitude, float
+    - coords: the dictionary, output from retrieve_data_info()
     - dtime: date/timestamp in UTC, as an Integer input.
     Data is unavailable before Jan 1, 1979.'''
     global WEATHER_API
     api_url = 'https://history.openweathermap.org/data/3.0/history/timemachine'
     payload = {
-        "lat":lat,
-        "lon":lon,
+        "lat":coords['lat'],
+        "lon":coords['lon'],
         "dt":dtime,
         "appid": WEATHER_API
     }
