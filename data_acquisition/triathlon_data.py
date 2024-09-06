@@ -33,11 +33,13 @@ def triathlon_api_request(section:str, query_content:dict={},
         #param_1/param_2/param_3/.../param_n
         if isinstance(sub_args,list):
             sub_arg_str = '/'.join([f'{item}' for item in sub_args])
-            api_url = api_url+f'/{sub_arg_str}'
+            re_url = re_url+f'/{sub_arg_str}'
 
         #Otherwise, we will likely only receive one argument.
         else:
-            api_url=api_url+f'/{sub_args}'
+            re_url=re_url+f'/{sub_args}'
+
+    print(re_url)
 
     # Supplies the Triathlon API key to the request. Do not remove.
     re_headers = {'apikey': TRIATHLON_API}
