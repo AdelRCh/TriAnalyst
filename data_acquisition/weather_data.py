@@ -7,7 +7,8 @@ import datetime as dt
 
 #Loading environment variables
 load_dotenv()
-WEATHER_API = os.getenv('WEATHER_API_KEY')
+WEATHER_API_OWD = os.getenv('WEATHER_API_KEY_OWD')
+WEATHER_API_VC = os.getenv('WEATHER_API_KEY_VC')
 
 # Retrieving the information from our program requests:
 def retrieve_event_coords(event_data: dict):
@@ -49,20 +50,39 @@ def retrieve_date_info(prog_data: dict):
     return int(round(prog_dt))
 
 # Weather data request for a given timestamp.
-def weather_history_request(coords:dict, dtime: int):
+def weather_history_request_owm(coords:dict, dtime: int):
     '''This function returns weather data based on the latitude, longitude, and
-    date/time in UTC. Upon receiving relevant information from the Triathlon
-    API, we will forward them here for this API query.
+    date/time in UTC from the OpenWeatherMap API. Upon receiving relevant
+    information from the Triathlon API, we will use them for this query.
     - coords: the dictionary, output from retrieve_data_info()
     - dtime: date/timestamp in UTC, as an Integer input.
     Data is unavailable before Jan 1, 1979.'''
-    global WEATHER_API
+    global WEATHER_API_OWD
     api_url = 'https://history.openweathermap.org/data/3.0/history/timemachine'
     payload = {
         "lat":coords['lat'],
         "lon":coords['lon'],
         "dt":dtime,
-        "appid": WEATHER_API
+        "appid": WEATHER_API_OWD
     }
     re = requests.get(url=api_url, params=payload)
+    return re
+
+def weather_history_request_vc(coords:dict, dtime: int):
+    '''This function returns weather data based on the latitude, longitude, and
+    date/time in UTC from the Visual Crossing API. Upon receiving relevant
+    information from the Triathlon API, we will use them for this query.
+    - coords: the dictionary, output from retrieve_data_info()
+    - dtime: date/timestamp in UTC, as an Integer input.
+    The data available covers a 50-year span..'''
+    global WEATHER_API_VC
+    api_url = 'https://weather.visualcrossing.com/VisualCrossingWebServices/'
+    api_url = api_url + 'rest/services/timeline/'
+    endpoint = f"{coords['lat']},{coords['lon']}/{dtime}"
+    payload = {
+        "key": WEATHER_API_VC,
+        "unitGroup":"metric",
+        "include": "current"
+    }
+    re = requests.get(url=api_url+endpoint, params=payload)
     return re
