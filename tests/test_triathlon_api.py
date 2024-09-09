@@ -86,10 +86,10 @@ def test_program_info_retrieval():
     assert re.status_code==200
     assert TIMESTAMP!=0 #We have retrieved a timestamp
 
-def test_weather_api_functionality():
+def test_weather_api_functionality_visualcrossing():
     '''Testing whether we have an output from our API with specific
     date/time/locations as input values'''
     global TIMESTAMP
     global COORDS
-    re = w_data.weather_history_request(coords=COORDS,dtime=TIMESTAMP)
+    re = w_data.weather_history_request_vc(coords=COORDS,dtime=TIMESTAMP)
     assert re.status_code==200
