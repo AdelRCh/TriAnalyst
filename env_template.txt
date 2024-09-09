@@ -1,6 +1,14 @@
 # The Triathlon API key is obtained at https://developers.triathlon.org/
-# This project uses the Open Weather Map API at https://openweathermap.org/
+# This project uses the Visual Crossing API at https://www.visualcrossing.com/
+# but supports the use of the OpenWeatherMapAPI at https://openweathermap.org/
 # Your .env file needs to contain the following entries when deploying
 # this project locally:
 TRIATHLON_API_KEY=""
-WEATHER_API_KEY=""
+
+# If you are using the OpenWeatherMap API, set this as "OWM"
+# Otherwise, if you are using Visual Crossing API, set it as "VC"
+WEATHER_API_FLAG=""
+
+# You may provide whichever you are using, but provide at least one API key.
+WEATHER_API_KEY_VC=""
+#WEATHER_API_KEY_OWM=""
